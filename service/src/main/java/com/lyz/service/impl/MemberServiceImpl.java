@@ -17,4 +17,14 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> findAll() {
         return iMemberMapper.findAll();
     }
+
+    @Override
+    public void update(Member member) {
+
+    }
+
+    @Override
+    public Member findById(int id) {
+        return iMemberMapper.findById(id);
+    }
 }

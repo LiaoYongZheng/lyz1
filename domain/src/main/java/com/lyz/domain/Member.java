@@ -1,5 +1,8 @@
 package com.lyz.domain;
 
+import com.lyz.utils.DateUtils;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,27 +15,58 @@ public class Member implements Serializable {
     private String email;
     private String address;
     private int status;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
     private Date createDate;
+    private String createDateStr;
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm")
     private Date updateDate;
+    private String updateDateStr;
     private int memberRank;
     private Rank rank;
 
     public Member() {
     }
 
-    public Member(int id, String username, String password, String sex, int phoneNumber, String email, String address, int status, Date createDate, Date updateDate, int memberRank, Rank rank) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.sex = sex;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-        this.status = status;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.memberRank = memberRank;
-        this.rank = rank;
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", sex='" + sex + '\'' +
+                ", phoneNumber=" + phoneNumber +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", status=" + status +
+                ", createDate=" + createDate +
+                ", createDateStr='" + createDateStr + '\'' +
+                ", updateDate=" + updateDate +
+                ", updateDateStr='" + updateDateStr + '\'' +
+                ", memberRank=" + memberRank +
+                ", rank=" + rank +
+                '}';
+    }
+
+    public String getCreateDateStr() {
+        if(createDate != null){
+            createDateStr = DateUtils.date2String(createDate,"yyyy-MM-dd HH:mm:ss");
+        }
+        return createDateStr;
+    }
+
+    public void setCreateDateStr(String createDateStr) {
+        this.createDateStr = createDateStr;
+    }
+
+    public String getUpdateDateStr() {
+        if (updateDate != null){
+            updateDateStr = DateUtils.date2String(updateDate,"yyyy-MM-dd HH:mm:ss");
+        }
+        return updateDateStr;
+    }
+
+    public void setUpdateDateStr(String updateDateStr) {
+        this.updateDateStr = updateDateStr;
     }
 
     public Rank getRank() {
@@ -131,21 +165,4 @@ public class Member implements Serializable {
         this.memberRank = memberRank;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", sex='" + sex + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", email=" + email +
-                ", address=" + address +
-                ", status=" + status +
-                ", createDate=" + createDate +
-                ", updateDate=" + updateDate +
-                ", memberRank=" + memberRank +
-                ", rank=" + rank +
-                '}';
-    }
 }

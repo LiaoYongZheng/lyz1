@@ -11,4 +11,8 @@ public interface IMemberMapper {
 
      public List<Member> findAll();
 
+     public void update(Member member);
+
+     public Member findById(int id);
+
 }

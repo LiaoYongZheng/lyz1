@@ -19,7 +19,7 @@
 
     <select id="findById"  resultType="rank" resultMap="rankResultMap">
 
-      select * from rank where id = #{id} and status = 1
+      select * from rank where id = #{id}
 
     </select>
 

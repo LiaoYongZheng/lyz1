@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 
@@ -44,7 +45,7 @@
     </div>
     <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-        <button class="layui-btn" onclick="x_admin_show('添加用户','${pageContext.request.contextPath}/member-add.jsp',600,400)"><i class="layui-icon"></i>添加</button>
+        <button class="layui-btn" onclick="x_admin_show('添加用户','${pageContext.request.contextPath}/member/add',600,400)"><i class="layui-icon"></i>添加</button>
         <span class="x-right" style="line-height:40px">共有数据：88 条</span>
     </xblock>
     <table class="layui-table">
@@ -64,21 +65,30 @@
             <th>操作</th></tr>
         </thead>
         <tbody>
+        <c:forEach items="${memberList}" var = "member">
         <tr>
             <td>
                 <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
             </td>
-            <td>1</td>
-            <td>小明</td>
-            <td>男</td>
-            <td>13000000000</td>
-            <td>admin@mail.com</td>
-            <td>北京市 海淀区</td>
-            <td>2017-01-01 11:11:42</td>
+            <td>${member.id}</td>
+            <td>${member.username}</td>
+            <td>${member.sex}</td>
+            <td>${member.phoneNumber}</td>
+            <td>${member.email}</td>
+            <td>${member.address}</td>
+            <td>${member.createDateStr}</td>
             <td class="td-status">
-                <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
+
+                      <c:if test="${member.status == '1'}">
+                          <span class="layui-btn layui-btn-normal layui-btn-mini"> 已启用 </span>
+                      </c:if>
+                      <c:if test="${member.status == '0'}">
+                          <span class="layui-btn layui-btn-normal layui-btn-mini layui-btn-disabled"> 已停用 </span>
+                      </c:if>
+            </td>
             <td class="td-manage">
-                <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
+
+                <a onclick="member_stop(this,${member.id})" href="javascript:;"  title="">
                     <i class="layui-icon">&#xe601;</i>
                 </a>
                 <a title="编辑"  onclick="x_admin_show('编辑','${pageContext.request.contextPath}/member-edit.jsp',600,400)" href="javascript:;">
@@ -92,34 +102,7 @@
                 </a>
             </td>
         </tr>
-        <tr>
-            <td>
-                <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-            </td>
-            <td>1</td>
-            <td>小明</td>
-            <td>男</td>
-            <td>13000000000</td>
-            <td>admin@mail.com</td>
-            <td>北京市 海淀区</td>
-            <td>2017-01-01 11:11:42</td>
-            <td class="td-status">
-                <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
-            <td class="td-manage">
-                <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
-                    <i class="layui-icon">&#xe601;</i>
-                </a>
-                <a title="编辑"  onclick="x_admin_show('编辑','${pageContext.request.contextPath}/member-edit.jsp',600,400)" href="javascript:;">
-                    <i class="layui-icon">&#xe642;</i>
-                </a>
-                <a onclick="x_admin_show('修改密码','${pageContext.request.contextPath}/member-password.jsp',600,400)" title="修改密码" href="javascript:;">
-                    <i class="layui-icon">&#xe631;</i>
-                </a>
-                <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-                    <i class="layui-icon">&#xe640;</i>
-                </a>
-            </td>
-        </tr>
+        </c:forEach>
         </tbody>
     </table>
     <div class="page">
@@ -151,25 +134,30 @@
 
     /*用户-停用*/
     function member_stop(obj,id){
+        var title = $(obj).parents("tr").find(".td-status").find('span').text();
         layer.confirm('确认要停用吗？',function(index){
-
-            if($(obj).attr('title')=='启用'){
+            if($.trim(title) == $.trim('已启用')){
 
                 //发异步把用户状态进行更改
-                $(obj).attr('title','停用')
-                $(obj).find('i').html('&#xe62f;');
-
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已停用!',{icon: 5,time:1000});
-
+                $.get("/web/member/"+id+".do",function (data){
+                    if (data.data == null){
+                      return  layer.msg('停用失败!',{icon: 5,time:1000});
+                    }
+                   else {
+                       $.post("/web/member/update.do",data.data,function (data){
+                           $(obj).attr('title','停用')
+                           $(obj).find('i').html('&#xe62f;');
+                           $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                           layer.msg('已停用!',{icon: 5,time:1000});
+                       },'json')
+                    }
+                });
             }else{
                 $(obj).attr('title','启用')
                 $(obj).find('i').html('&#xe601;');
-
                 $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
                 layer.msg('已启用!',{icon: 5,time:1000});
             }
-
         });
     }
 
