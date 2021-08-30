@@ -44,7 +44,7 @@ public class MemberController {
     }
     @PostMapping("/update.do")
     @ResponseBody
-    public ResultInfo update(@RequestBody Member member){
+    public ResultInfo update(Member member){
         System.out.println(member);
         return new ResultInfo(true,member,"查询成功");
     }

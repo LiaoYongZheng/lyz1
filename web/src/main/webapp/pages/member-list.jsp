@@ -131,6 +131,21 @@
             elem: '#end' //指定元素
         });
     });
+    function getTime(timestamp) {
+        var day = "",
+            month = "",
+            hours = "",
+            minutes = "",
+            d = new Date(timestamp);
+
+        day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+        month = d.getMonth() + 1 < 10 ? '0' + (d.getMonth()+1) : (d.getMonth()+1);
+        hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+        minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+        var date = (d.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes);
+        return date
+    }
+
 
     /*用户-停用*/
     function member_stop(obj,id){
@@ -144,9 +159,9 @@
                       return  layer.msg('停用失败!',{icon: 5,time:1000});
                     }
                    else {
-
-                        console.log( data.data);
-                       $.post("/web/member/update.do",  data.data ,function (data){
+                     data.data.updateDate =   getTime( data.data.updateDate);
+                     data.data.createDate =   getTime( data.data.createDate);
+                       $.post("/web/member/update.do",JSON.stringify(data.data) ,function (data){
                            $(obj).attr('title','停用')
                            $(obj).find('i').html('&#xe62f;');
                            $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
