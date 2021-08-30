@@ -3,15 +3,14 @@ package com.lyz.controller;
 
 
 import com.lyz.domain.Member;
+import com.lyz.domain.response.MemberRank;
 import com.lyz.domain.response.ResultInfo;
 import com.lyz.service.MemberService;
 import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jmx.support.ObjectNameManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sun.jvm.hotspot.code.ObjectValue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,16 +23,16 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @RequestMapping("/findAll.do")
+    @GetMapping("/findAll.do")
     public ModelAndView findAll(){
         ModelAndView mv = new ModelAndView();
-        List<Member> memberList = memberService.findAll();
+        List<MemberRank> memberList = memberService.findAll();
         mv.addObject("memberList",memberList);
         System.out.println(memberList);
         mv.setViewName("member-list");
         return mv;
     }
-    @RequestMapping("/{id}.do")
+    @GetMapping("/{id}.do")
     @ResponseBody
     public ResultInfo findById(@PathVariable("id")String id){
 

@@ -144,7 +144,9 @@
                       return  layer.msg('停用失败!',{icon: 5,time:1000});
                     }
                    else {
-                       $.post("/web/member/update.do",data.data,function (data){
+
+                        console.log( data.data);
+                       $.post("/web/member/update.do",  data.data ,function (data){
                            $(obj).attr('title','停用')
                            $(obj).find('i').html('&#xe62f;');
                            $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');

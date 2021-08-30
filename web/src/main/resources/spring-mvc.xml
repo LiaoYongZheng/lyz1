@@ -36,6 +36,7 @@
     <!-- 开启对SpringMVC注解的支持 -->
     <mvc:annotation-driven />
 
+
     <!--
         支持AOP的注解支持，AOP底层使用代理技术
         JDK动态代理，要求必须有接口

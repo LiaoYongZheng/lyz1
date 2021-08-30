@@ -22,7 +22,7 @@ public class Member implements Serializable {
     private Date updateDate;
     private String updateDateStr;
     private int memberRank;
-    private Rank rank;
+
 
     public Member() {
     }
@@ -43,7 +43,7 @@ public class Member implements Serializable {
                 ", updateDate=" + updateDate +
                 ", updateDateStr='" + updateDateStr + '\'' +
                 ", memberRank=" + memberRank +
-                ", rank=" + rank +
+
                 '}';
     }
 
@@ -69,13 +69,7 @@ public class Member implements Serializable {
         this.updateDateStr = updateDateStr;
     }
 
-    public Rank getRank() {
-        return rank;
-    }
 
-    public void setRank(Rank rank) {
-        this.rank = rank;
-    }
 
     public int getId() {
         return id;

@@ -24,11 +24,5 @@
         <maven.compiler.source>9</maven.compiler.source>
         <maven.compiler.target>9</maven.compiler.target>
     </properties>
-<build>
-    <resources>
-        <resource>
-            <directory>src/main/java</directory>
-        </resource>
-    </resources>
-</build>
+
 </project>
