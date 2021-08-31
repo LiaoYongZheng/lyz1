@@ -88,8 +88,8 @@
             </td>
             <td class="td-manage">
 
-                <a onclick="member_stop(this,${member.id})" href="javascript:;"  title="">
-                    <i class="layui-icon">&#xe601;</i>
+                <a onclick="member_stop(this,${member.id})" href="javascript:;"  title="${member.status > 0 ? '停用':'启用'}">
+                    <i class="layui-icon">${member.status > 0 ? '&#xe601;':'&#xe62f;'}</i>
                 </a>
                 <a title="编辑"  onclick="x_admin_show('编辑','${pageContext.request.contextPath}/member-edit.jsp',600,400)" href="javascript:;">
                     <i class="layui-icon">&#xe642;</i>
@@ -131,49 +131,68 @@
             elem: '#end' //指定元素
         });
     });
-    function getTime(timestamp) {
-        var day = "",
-            month = "",
-            hours = "",
-            minutes = "",
-            d = new Date(timestamp);
+   function update(obj,member){
+       if (member.status === 1){
+           member.status = 0;
 
-        day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
-        month = d.getMonth() + 1 < 10 ? '0' + (d.getMonth()+1) : (d.getMonth()+1);
-        hours = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
-        minutes = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-        var date = (d.getFullYear() + "-" + month + "-" + day + " " + hours + ":" + minutes);
-        return date
+       }
+      else if (member.status === 0){
+           member.status = 1;
+
+       }
+
+       $.ajax({
+           url: '/web/member/update.do',
+           contentType: 'application/json;charset=UTF-8',
+           data: JSON.stringify(member),
+           dataType: 'json',
+           type: 'post',
+           success:function (data){
+               if (data.flag){
+                   if (member.status == 0){
+                       $(obj).attr('title','启用')
+                       $(obj).find('i').html('&#xe62f;');
+                       $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                       layer.msg('已停用!',{icon: 5,time:1000});
+                   }
+                 else {
+                       $(obj).attr('title','停用')
+                       $(obj).find('i').html('&#xe601;');
+                       $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                       layer.msg('已启用!',{icon: 5,time:1000});
+                   }
+               }
+               else {
+                   return  layer.msg('停用失败!',{icon: 5,time:1000});
+               }
+           }
+       });
+
+   }
+    function findById(obj,id) {
+
+        $.get("/web/member/" + id + ".do", function (data) {
+            if (data.data == null) {
+                return layer.msg('停用失败!', {icon: 5, time: 1000});
+            }
+           update(obj,data.data);
+
+        });
+
     }
-
-
     /*用户-停用*/
     function member_stop(obj,id){
         var title = $(obj).parents("tr").find(".td-status").find('span').text();
-        layer.confirm('确认要停用吗？',function(index){
+       let msg = obj.title;
+        layer.confirm('确认要'+msg+'吗？',function(index){
             if($.trim(title) == $.trim('已启用')){
 
                 //发异步把用户状态进行更改
-                $.get("/web/member/"+id+".do",function (data){
-                    if (data.data == null){
-                      return  layer.msg('停用失败!',{icon: 5,time:1000});
-                    }
-                   else {
-                     data.data.updateDate =   getTime( data.data.updateDate);
-                     data.data.createDate =   getTime( data.data.createDate);
-                       $.post("/web/member/update.do",JSON.stringify(data.data) ,function (data){
-                           $(obj).attr('title','停用')
-                           $(obj).find('i').html('&#xe62f;');
-                           $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                           layer.msg('已停用!',{icon: 5,time:1000});
-                       },'json')
-                    }
-                });
+                findById(obj,id);
+
+
             }else{
-                $(obj).attr('title','启用')
-                $(obj).find('i').html('&#xe601;');
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已启用!',{icon: 5,time:1000});
+                findById(obj,id);
             }
         });
     }

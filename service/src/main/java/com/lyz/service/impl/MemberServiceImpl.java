@@ -21,7 +21,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void update(Member member) {
-
+        try {
+            iMemberMapper.update(member);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

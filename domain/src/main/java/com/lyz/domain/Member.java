@@ -4,6 +4,7 @@ import com.lyz.utils.DateUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.Date;
 
 public class Member implements Serializable {
@@ -148,7 +149,8 @@ public class Member implements Serializable {
         return updateDate;
     }
 
-    public void setUpdateDate(Date updateDate) {
+    public void setUpdateDate(Date updateDate)  {
+
         this.updateDate = updateDate;
     }
 

@@ -6,7 +6,6 @@ import com.lyz.domain.Member;
 import com.lyz.domain.response.MemberRank;
 import com.lyz.domain.response.ResultInfo;
 import com.lyz.service.MemberService;
-import com.mysql.jdbc.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +41,11 @@ public class MemberController {
         }
         return new ResultInfo(true,member,"查询成功");
     }
-    @PostMapping("/update.do")
+    @PostMapping( "/update.do")
     @ResponseBody
-    public ResultInfo update(Member member){
+    public ResultInfo update(@RequestBody Member member){
         System.out.println(member);
-        return new ResultInfo(true,member,"查询成功");
+         memberService.update(member);
+        return new ResultInfo(true,"数据更新成功");
     }
 }
