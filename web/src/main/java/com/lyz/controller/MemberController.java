@@ -2,8 +2,10 @@ package com.lyz.controller;
 
 
 
+import com.github.pagehelper.PageInfo;
 import com.lyz.domain.Member;
 import com.lyz.domain.response.MemberRank;
+import com.lyz.domain.response.PaginationBean;
 import com.lyz.domain.response.ResultInfo;
 import com.lyz.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,12 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping("/findAll.do")
-    public ModelAndView findAll(){
+    public ModelAndView findAll(PaginationBean paginationBean){
         ModelAndView mv = new ModelAndView();
-        List<MemberRank> memberList = memberService.findAll();
-        mv.addObject("memberList",memberList);
-        System.out.println(memberList);
+        List<MemberRank> memberList = memberService.findAll(paginationBean);
+        PageInfo pageInfo = new PageInfo<>();
+        pageInfo.setList(memberList);
+        mv.addObject("pageInfo",pageInfo);
         mv.setViewName("member-list");
         return mv;
     }
@@ -44,7 +47,6 @@ public class MemberController {
     @PostMapping( "/update.do")
     @ResponseBody
     public ResultInfo update(@RequestBody Member member){
-        System.out.println(member);
          memberService.update(member);
         return new ResultInfo(true,"数据更新成功");
     }

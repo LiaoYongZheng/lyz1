@@ -65,7 +65,7 @@
             <th>操作</th></tr>
         </thead>
         <tbody>
-        <c:forEach items="${memberList}" var = "member">
+        <c:forEach items="${pageInfo.list}" var = "member">
         <tr>
             <td>
                 <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
@@ -131,6 +131,12 @@
             elem: '#end' //指定元素
         });
     });
+
+    function submit_form(obj) {
+        let data = $(obj).serialize();
+        console.log(data);
+
+    }
    function update(obj,member){
        if (member.status === 1){
            member.status = 0;

@@ -3,6 +3,7 @@ package com.lyz.mapper;
 
 import com.lyz.domain.Member;
 import com.lyz.domain.response.MemberRank;
+import com.lyz.domain.response.PaginationBean;
 import org.apache.ibatis.annotations.*;
 
 
@@ -11,7 +12,7 @@ import java.util.List;
 public interface IMemberMapper {
 
      //查询所有
-     @Select("select * from member")
+ @Select("<script>select * from member <where><if test=\" username != null and username != '' \">and username like concat('%',#{username},'%')</if></where></script>")
      @Results(id = "memberResultMap",value = {
       @Result(id = true,property = "id",column = "id"),
       @Result(property = "username",column = "username"),
@@ -24,7 +25,7 @@ public interface IMemberMapper {
       @Result(property = "updateDate",column = "update_date"),
       @Result(property = "rank",column = "member_rank",one = @One(select = ("com.lyz.mapper.IRankMapper.findById")))
      })
-     public List<MemberRank> findAll();
+     public List<MemberRank> findAll(PaginationBean paginationBean);
 
      //更新
       @Update("update member set username=#{username}," +
