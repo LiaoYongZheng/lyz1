@@ -15,8 +15,8 @@ public interface IMemberMapper {
  @Select("<script>select * from member" +
          " <where>" +
          "<if test=\" username != null and username != '' \">and username like concat('%',#{username},'%')</if>" +
-         "<if test=\"start!=null \"> and create_date <![CDATA[>=]]>  #{start} </if>" +
-         "<if test=\"end !=null \">  and create_date <![CDATA[<=]]>  #{end} </if>" +
+         "<if test=\"start!=null \">   <![CDATA[   and DATE_FORMAT(create_date, '%Y-%m-%d')>=  DATE_FORMAT(#{start}, '%Y-%m-%d')   ]]> </if>" +
+         "<if test=\"end !=null \">  <![CDATA[  and DATE_FORMAT(create_date, '%Y-%m-%d') <= DATE_FORMAT(#{end}, '%Y-%m-%d')    ]]> </if>" +
          "</where>" +
          "</script>")
      @Results(id = "memberResultMap",value = {
