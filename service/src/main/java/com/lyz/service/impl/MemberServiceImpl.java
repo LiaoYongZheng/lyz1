@@ -19,6 +19,12 @@ public class MemberServiceImpl implements MemberService {
     private IMemberMapper iMemberMapper;
     @Override
     public List<MemberRank> findAll(PaginationBean paginationBean) {
+        if (paginationBean.getPage()==null){
+            paginationBean.setPage(1);
+        }
+        if (paginationBean.getSize()==null){
+            paginationBean.setSize(10);
+        }
         PageHelper.startPage(paginationBean.getPage(), paginationBean.getSize());
         return iMemberMapper.findAll(paginationBean);
     }

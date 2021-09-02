@@ -24,13 +24,13 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/findAll.do")
+    @RequestMapping("/findAll.do")
     public ModelAndView findAll(PaginationBean paginationBean){
         ModelAndView mv = new ModelAndView();
         List<MemberRank> memberList = memberService.findAll(paginationBean);
-        PageInfo pageInfo = new PageInfo<>();
-        pageInfo.setList(memberList);
+        PageInfo<MemberRank> pageInfo = new PageInfo<>(memberList);
         mv.addObject("pageInfo",pageInfo);
+        mv.addObject("paginationBean",paginationBean);
         mv.setViewName("member-list");
         return mv;
     }

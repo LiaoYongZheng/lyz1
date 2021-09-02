@@ -12,7 +12,13 @@ import java.util.List;
 public interface IMemberMapper {
 
      //查询所有
- @Select("<script>select * from member <where><if test=\" username != null and username != '' \">and username like concat('%',#{username},'%')</if></where></script>")
+ @Select("<script>select * from member" +
+         " <where>" +
+         "<if test=\" username != null and username != '' \">and username like concat('%',#{username},'%')</if>" +
+         "<if test=\"start!=null \"> and create_date <![CDATA[>=]]>  #{start} </if>" +
+         "<if test=\"end !=null \">  and create_date <![CDATA[<=]]>  #{end} </if>" +
+         "</where>" +
+         "</script>")
      @Results(id = "memberResultMap",value = {
       @Result(id = true,property = "id",column = "id"),
       @Result(property = "username",column = "username"),

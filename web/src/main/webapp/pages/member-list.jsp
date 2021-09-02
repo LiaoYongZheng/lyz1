@@ -36,17 +36,19 @@
 </div>
 <div class="x-body">
     <div class="layui-row">
-        <form class="layui-form layui-col-md12 x-so">
-            <input class="layui-input" placeholder="开始日" name="start" id="start">
-            <input class="layui-input" placeholder="截止日" name="end" id="end">
-            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+        <form class="layui-form layui-col-md12 x-so" action="${pageContext.request.contextPath}/member/findAll.do" method="post">
+            <input type="hidden" name="page" value="${paginationBean.page}">
+            <input type="hidden" name="size" value="${paginationBean.size}">
+            <input class="layui-input" placeholder="开始日" name="start" id="start" >
+            <input class="layui-input" placeholder="截止日" name="end" id="end" >
+            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input" id="username" >
             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
         </form>
     </div>
     <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
         <button class="layui-btn" onclick="x_admin_show('添加用户','${pageContext.request.contextPath}/member/add',600,400)"><i class="layui-icon"></i>添加</button>
-        <span class="x-right" style="line-height:40px">共有数据：88 条</span>
+        <span class="x-right" style="line-height:40px">共有数据：${pageInfo.total} 条</span>
     </xblock>
     <table class="layui-table">
         <thead>
@@ -107,12 +109,18 @@
     </table>
     <div class="page">
         <div>
-            <a class="prev" href="">&lt;&lt;</a>
-            <a class="num" href="">1</a>
-            <span class="current">2</span>
-            <a class="num" href="">3</a>
-            <a class="num" href="">489</a>
-            <a class="next" href="">&gt;&gt;</a>
+            <a class="prev" href="${pageContext.request.contextPath}/member/findAll.do?page=${pageInfo.pageNum-1 <= 1 ? 1:pageInfo.pageNum}&size=${pageInfo.pageSize}">&lt;&lt;</a>
+        <c:forEach begin="1" end="${pageInfo.pages}" var="pageNum">
+            <c:if test="${pageNum == paginationBean.page}">
+                 <span class="current"> ${pageNum}</span>
+            </c:if>
+            <c:if test="${pageNum != paginationBean.page}">
+                <a class="mun" href="${pageContext.request.contextPath}/member/findAll.do?page=${pageNum}&size=${pageInfo.pageSize}">${pageNum}</a>
+            </c:if>
+
+        </c:forEach>
+
+            <a class="next" href="${pageContext.request.contextPath}/member/findAll.do?page=${pageInfo.pages > pageInfo.pages ? pageInfo.pages:pageInfo.pages}&size=${pageInfo.pageSize}">&gt;&gt;</a>
         </div>
     </div>
 
@@ -132,11 +140,6 @@
         });
     });
 
-    function submit_form(obj) {
-        let data = $(obj).serialize();
-        console.log(data);
-
-    }
    function update(obj,member){
        if (member.status === 1){
            member.status = 0;
@@ -176,7 +179,6 @@
 
    }
     function findById(obj,id) {
-
         $.get("/web/member/" + id + ".do", function (data) {
             if (data.data == null) {
                 return layer.msg('停用失败!', {icon: 5, time: 1000});
